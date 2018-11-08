@@ -1,21 +1,39 @@
 package ru.ifmo.cet.javabasics;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 public class WarAndPeaceExercise {
 
     public static String warAndPeace() {
-        final Path tome12Path = Paths.get("src", "main", "resources", "WAP12.txt");
-        final Path tome34Path = Paths.get("src", "main", "resources", "WAP34.txt");
 
-        // TODO map lowercased words to its amount in text and concatenate its entries.
-        // TODO Iff word "котик" occurred in text 23 times then its entry would be "котик - 23\n".
-        // TODO Entries in final String should be also sorted by amount and then in alphabetical order iff needed.
-        // TODO Also omit any word with lengths less than 4 and frequency less than 10
+        String str = (read("WAP12.txt") + read("WAP34.txt")).replaceAll("[^а-яА-Яa-zA-Z]", " ");
 
-        throw new UnsupportedOperationException();
+        return Arrays.stream(str.split(" ")).collect(Collectors.groupingBy(s -> s.toLowerCase())).entrySet().stream()
+                .filter(it -> it.getKey().length() >= 4 && it.getValue().size() >= 10)
+                .sorted((a, b) -> a.getValue().size() == b.getValue().size() ?
+                (a.getKey().compareTo(b.getKey())) : b.getValue().size() - a.getValue().size())
+                .map(it -> it.getKey() + " - " + it.getValue().size())
+                .collect(Collectors.joining("\n"));
+
+    }
+
+    private static String read(String fileName)
+    {
+        try {
+            return String.join(" ", Files.readAllLines(Paths.get("src", "main", "resources", fileName),
+                    Charset.forName("windows-1251")));
+        }catch(IOException ex)
+        {
+            return "";
+        }
     }
 
 }
