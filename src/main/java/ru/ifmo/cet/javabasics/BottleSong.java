@@ -1,43 +1,47 @@
 package ru.ifmo.cet.javabasics;
 
-/**
- * Нужно реализовать констурктор и метод, возвращающий слова песни про бутылки на стене.
- * <p>
- * Слова следующие:
- * <p>
- * 99 bottles of beer on the wall, 99 bottles of beer
- * Take one down, pass it around, 98 bottles of beer
- * 98 bottles of beer on the wall, 98 bottles of beer
- * Take one down, pass it around, 97 bottles of beer
- * 97 bottles of beer on the wall, 97 bottles of beer
- * Take one down, pass it around, 96 bottles of beer
- * 96 bottles of beer on the wall, 96 bottles of beer
- * Take one down, pass it around, 95 bottles of beer
- * 95 bottles of beer on the wall, 95 bottles of beer
- * ...
- * <p>
- * 3 bottles of beer on the wall, 3 bottles of beer
- * Take one down, pass it around, 2 bottles of beer
- * 2 bottles of beer on the wall, 2 bottles of beer
- * Take one down, pass it around, 1 bottles of beer
- * 1 bottle of beer on the wall, 1 bottle of beer
- * Take one down, pass it around, no more bottles of beer on the wall
- * No more bottles of beer on the wall, no more bottles of beer
- * Go to the store and buy some more, 99 bottles of beer on the wall
- * <p>
- * Дело усложняется тем, что текст песни переменный:
- * За раз может быть взято несколько бутылок.
- * Значение передается в качестве параметра конструктора
- * Нужно ограничить возможность взятия бутылок натуральным число не более 99 бутылок за раз.
- */
+
 public class BottleSong {
 
+    private int bottleT;
+    private final static String [] numbers = {"zero", "one", "two", "three", "four", "five", "six",
+            "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen",
+            "sixteen", "seventeen", "eighteen", "nineteen", "twenty", "thirty", "forty", "fifty",
+            "sixty", "seventy", "eighty", "ninety"};
+
     public BottleSong(int bottleTakenAtOnce) {
+        if (bottleTakenAtOnce < 1 || bottleTakenAtOnce > 99)
+            throw new IllegalArgumentException("Недопустимое количество бутылок");
+        bottleT = bottleTakenAtOnce;
         //TODO
+    }
+    private String numberName(int n)
+    {
+        if (n <= 20)
+            return numbers[n];
+        if (n % 10 != 0)
+            return(numbers[n/10 + 18] + " " + numbers[n%10]);
+        else
+            return numbers[n/10 + 18];
     }
 
     public String getBottleSongLyrics() {
-        //TODO
-        throw new UnsupportedOperationException();
+        StringBuilder sb = new StringBuilder();
+        int left = 99;
+
+        sb.append("99 bottles of beer on the wall, 99 bottles of beer.\n");
+        for (int i = 99 - bottleT; i>0; i-= bottleT)
+        {
+            String end = i > 1 ? "s" : "";
+            sb.append(String.format("Take %s down and pass around, %d bottle%s of beer on the wall.\n", numberName(bottleT), i, end));
+            sb.append(String.format("%d bottle%s of beer on the wall, %d bottle%s of beer.\n", i, end, i, end));
+            left = i;
+        }
+
+        sb.append(String.format("Take %s down and pass around, no more bottles of beer on the wall.\n" +
+                "No more bottles of beer on the wall, no more bottles of beer.\n" +
+                "Go to the store and buy some more, 99 bottles of beer on the wall.\n", numberName(left)));
+
+        return sb.toString();
     }
 }
