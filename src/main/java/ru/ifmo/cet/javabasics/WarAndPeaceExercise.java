@@ -18,7 +18,9 @@ public class WarAndPeaceExercise {
         // TODO Also omit any word with lengths less than 4 and frequency less than 10
 
         String s = (read("WAP12.txt") + read("WAP34.txt")).replaceAll("[^а-яА-Яa-zA-Z]", " ");
-        int i = 0, j, bword, eword;
+        int i = 0;
+        int bword;
+        int eword;
         HashMap<String, Integer> wap = new HashMap<>();
         while (i < s.length()) {
             while ( i < s.length() && (Character.isSpaceChar(s.charAt(i))))
@@ -70,8 +72,8 @@ public class WarAndPeaceExercise {
 
 class WordCount implements Comparable<WordCount>
 {
-    String word;
-    int count;
+    public String word;
+    public int count;
 
     @Override
     public int compareTo(WordCount o) {
